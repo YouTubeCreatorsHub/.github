@@ -4,52 +4,64 @@ on:
   issues:
     types: [opened, reopened, closed]
   pull_request:
-    types: [opened, closed, reopened]
+    types: [opened, reopened, closed]
 
 jobs:
-
   issue_automation:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        repository: ['.github', 'BE', 'fe']
-        branch: ['main', 'dev']
     steps:
     - uses: actions/checkout@v2
-      with:
-        repository: ${{ matrix.repository }}
-        ref: ${{ matrix.branch }}
 
     - uses: actions/github-script@v6
       with:
         script: |
-          github.rest.projects.createCard({
-            project_id: 1,
-            column_id: 12,
-            content_id: context.payload.issue.id,
-            content_type: 'Issue'
-          })
+          const COLUMN_IDS = {
+            DONE: '98236657',
+            SPRINT_BACKLOG: '2b4b3335',
+            IN_PROGRESS: 'dc54b4f8',
+            IN_REVIEW: '3fdc4773'
+          };
 
-          // Move PR to In Review column
-          github.rest.projects.moveCard({
-            card_id: context.payload.project_card.id,
-            position: 'top',
-            column_id: 13 // In Review column ID
-          })
+          // 이슈가 생성될 때
+          if (context.eventName === 'issues' && context.payload.action === 'opened') {
+            await github.rest.projects.createCard({
+              column_id: COLUMN_IDS.SPRINT_BACKLOG,
+              content_id: context.payload.issue.id,
+              content_type: 'Issue'
+            });
+          }
 
-          // Move merged PR to Done column
-          if (context.payload.pull_request.merged) {
-            github.rest.projects.moveCard({
-              card_id: context.payload.project_card.id,
-              position: 'top',
-              column_id: 14 // Done column ID
-            })
+          // PR 관련 자동화
+          if (context.eventName === 'pull_request') {
+            const card_id = context.payload.project_card?.id;
+            
+            if (context.payload.action === 'opened') {
+              // PR이 열릴 때 In Review로 이동
+              await github.rest.projects.moveCard({
+                card_id: card_id,
+                column_id: COLUMN_IDS.IN_REVIEW,
+                position: 'top'
+              });
+            } else if (context.payload.action === 'closed' && context.payload.pull_request.merged) {
+              // PR이 머지되면 Done으로 이동
+              await github.rest.projects.moveCard({
+                card_id: card_id,
+                column_id: COLUMN_IDS.DONE,
+                position: 'top'
+              });
+            }
           }
 
   add_reviewers:
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.action == 'opened'
     steps:
-    - uses: actions/add-reviewer@v1
+    - uses: actions/github-script@v6
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        reviewers: [choco5958, lim3873, tlswltjq]
+        script: |
+          await github.rest.pulls.requestReviewers({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.payload.pull_request.number,
+            reviewers: ['choco5958', 'lim3873', 'tlswltjq']
+          });

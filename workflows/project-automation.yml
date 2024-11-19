@@ -4,51 +4,87 @@ on:
   issues:
     types: [opened, reopened, closed]
   pull_request:
-    types: [opened, reopened, closed, converted_to_draft]
+    types: [opened, reopened, closed, ready_for_review]
 
 jobs:
-  automate_projects:
+  project_automation:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/github-script@v6
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const COLUMNS = {
-              BACKLOG: '17052d30',
-              SPRINT_BACKLOG: '2b4b3335',
-              IN_PROGRESS: 'dc54b4f8',
-              IN_REVIEW: '3fdc4773',
-              DONE: '98236657'
+              BACKLOG: '17052d30',      // 제품 백로그 아이템들
+              SPRINT_BACKLOG: '2b4b3335', // 현재 스프린트 작업들
+              IN_PROGRESS: 'dc54b4f8',    // 진행 중인 작업
+              IN_REVIEW: '3fdc4773',      // 코드 리뷰 중
+              DONE: '98236657'          // 완료된 작업
             };
 
-            async function updateIssueStatus(issueNumber, columnId) {
+            async function moveIssueToColumn(columnId) {
+              // 이슈/PR을 해당 컬럼으로 이동하는 로직
+              const mutation = `
+                mutation {
+                  updateProjectV2ItemFieldValue(input: {
+                    projectId: "${process.env.PROJECT_ID}"
+                    itemId: "${context.payload.item_id}"
+                    fieldId: "Status"
+                    value: {
+                      singleSelectOptionId: "${columnId}"
+                    }
+                  }) {
+                    projectV2Item {
+                      id
+                    }
+                  }
+                }
+              `;
+              
               try {
-                await github.rest.projects.updateCard({
-                  card_id: context.payload.project_card?.id,
-                  column_id: columnId,
-                  position: 'top'
-                });
+                await github.graphql(mutation);
               } catch (error) {
-                console.error('Error updating issue status:', error);
+                console.error('Error moving item:', error);
               }
             }
 
-            // 새 이슈가 생성되면 Backlog로 이동
+            // 새 이슈가 생성될 때
             if (context.eventName === 'issues' && context.payload.action === 'opened') {
-              await updateIssueStatus(context.payload.issue.number, COLUMNS.BACKLOG);
+              await moveIssueToColumn(COLUMNS.BACKLOG); // 새 이슈는 Backlog로
             }
 
-            // PR이 생성되면 연결된 이슈를 In Review로 이동
+            // 이슈가 할당되었을 때
+            if (context.eventName === 'issues' && context.payload.action === 'assigned') {
+              await moveIssueToColumn(COLUMNS.IN_PROGRESS); // 할당된 이슈는 In Progress로
+            }
+
+            // PR이 생성될 때
             if (context.eventName === 'pull_request' && context.payload.action === 'opened') {
-              await updateIssueStatus(context.payload.pull_request.number, COLUMNS.IN_REVIEW);
+              await moveIssueToColumn(COLUMNS.IN_REVIEW); // PR은 In Review로
             }
 
-            // 이슈나 PR이 닫히면 Done으로 이동
+            // PR이 머지되거나 이슈가 닫힐 때
             if (context.payload.action === 'closed') {
-              await updateIssueStatus(
-                context.eventName === 'issues' 
-                  ? context.payload.issue.number 
-                  : context.payload.pull_request.number,
-                COLUMNS.DONE
-              );
+              // PR이 머지된 경우
+              if (context.eventName === 'pull_request' && context.payload.pull_request.merged) {
+                await moveIssueToColumn(COLUMNS.DONE);
+              }
+              // 일반 이슈가 닫힌 경우
+              else if (context.eventName === 'issues') {
+                await moveIssueToColumn(COLUMNS.DONE);
+              }
             }
+
+  add_reviewers:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.action == 'opened'
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.pulls.requestReviewers({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              reviewers: ['choco5958', 'lim3873', 'tlswltjq']
+            });

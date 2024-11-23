@@ -67,4 +67,4 @@
 
 - [Project Board](링크)
 - [API Documentation](링크)
-- [Diagrams](.github/docs/diagrams/erd.md)
+- [Diagrams](https://github.com/YouTubeCreatorsHub/.github/blob/main/docs/diagrams/erd.md)

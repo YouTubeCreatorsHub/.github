@@ -37,25 +37,25 @@
 
 ## 📅 Project Timeline
 
-- Phase 1 (v1.1 Core Features): ~ 2024.01.05
+- Phase 1 (v1.0 MVP Release): ~ 2024.12.09
+  - 주요 목표 초기 환경
+  - 구축 프로젝트
+  - 레포지토리 설정
+
+- Phase 2 (v1.1 Core Features): ~ 2024.01.05
   - 크리에이터 프로필
   - 프로필 CRUD
   - YouTube 채널 연동
 
-- Phase 2 (v1.2 Advanced Features): ~ 2024.02.03
+- Phase 3 (v1.2 Advanced Features): ~ 2024.02.03
   - 고급 분석 기능
   - 시청자 행동 패턴
   - 콘텐츠 성과
 
-- Phase 3 (v1.3 Mobile & Optimization): ~ 2024.02.24
+- Phase 4 (v1.3 Mobile & Optimization): ~ 2024.02.24
   - 모바일 웹 대응
   - UI/UX 개선
   - 성능 최적화
-
-- Phase 4 (v1.0 MVP Release): ~ 2024.12.09
-  - 주요 목표 초기 환경
-  - 구축 프로젝트
-  - 레포지토리 설정
 
 ## 👥 Team
 

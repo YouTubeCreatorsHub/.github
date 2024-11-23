@@ -2,7 +2,7 @@
 
 ## 1. 콘텐츠 제작 도구 (Content Creation Tools)
 
-### 1.1 썸네일 메이커 API
+### 1.1 썸네일 메이커 API(보류)
 #### 썸네일 템플릿 관리
 - **GET** `/thumbnails/templates`
 - **GET** `/thumbnails/templates/{templateId}`
@@ -189,7 +189,7 @@
 - **PUT** `/automation/workflows/{workflowId}`
 - **GET** `/automation/workflows/{workflowId}/history`
 
-## 7. 교육 및 성장 (Education & Growth)
+## 7. 교육 및 성장 (Education & Growth) (필요시 개발)
 
 ### 7.1 온라인 강좌 API
 - **GET** `/education/courses`
@@ -202,7 +202,7 @@
 - **POST** `/education/skills/track`
 - **GET** `/education/skills/recommendations`
 
-## 8. 크로스 플랫폼 관리 (Cross-Platform Management)
+## 8. 크로스 플랫폼 관리 (Cross-Platform Management) (필요시 개발)
 
 ### 8.1 플랫폼 연동 API
 - **POST** `/platforms/connect`

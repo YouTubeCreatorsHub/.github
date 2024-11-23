@@ -65,6 +65,6 @@
 
 ## 📎 Links
 
-- [Project Board](https://github.com/orgs/YouTubeCreatorsHub/projects/1)
-- [API Documentation](링크)
-- [Diagrams](https://github.com/YouTubeCreatorsHub/.github/blob/main/docs/diagrams/erd.md)
+### - [Project Board](https://github.com/orgs/YouTubeCreatorsHub/projects/1)
+### - [API Documentation](링크)
+### - [Diagrams](https://github.com/YouTubeCreatorsHub/.github/blob/main/docs/diagrams/erd.md)

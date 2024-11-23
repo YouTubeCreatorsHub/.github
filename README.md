@@ -67,4 +67,4 @@
 
 - [Project Board](링크)
 - [API Documentation](링크)
-- [Wiki](.docs/diagrams/erd.md)
+- [Diagrams](.github/docs/diagrams/erd.md)

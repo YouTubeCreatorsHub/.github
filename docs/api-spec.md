@@ -1,4 +1,4 @@
-# CreatorHub 완전한 API 명세서
+# CreatorHub API 명세서
 
 ## 1. 콘텐츠 제작 도구 (Content Creation Tools)
 

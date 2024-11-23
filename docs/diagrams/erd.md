@@ -1,3 +1,4 @@
+```mermaid
 erDiagram
     USERS ||--o{ CREATOR_PROFILES : has
     USERS ||--o{ SOCIAL_ACCOUNTS : manages

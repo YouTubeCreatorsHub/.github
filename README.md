@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/7ac3fcd9-595b-420d-9720-310d678370f2)# 🎨 YouTube Creators Hub
+# 🎨 YouTube Creators Hub
 
 크리에이터를 위한 통합 플랫폼
 

@@ -33,7 +33,7 @@
 ## 📌 Repository 구조
 
 - [BE](https://github.com/YouTubeCreatorsHub/BE) - Backend Repository
-- [FE](https://github.com/YouTubeCreatorsHub/FE) - Frontend Repository
+- [FE](https://github.com/YouTubeCreatorsHub/fe) - Frontend Repository
 
 ## 📅 Project Timeline
 

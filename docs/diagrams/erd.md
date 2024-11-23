@@ -141,7 +141,7 @@ erDiagram
         datetime earned_at
         datetime paid_at
     }
-
+```
 
 #1. 핵심 사용자 관리
 - `USERS`: 기본 사용자 정보 관리
